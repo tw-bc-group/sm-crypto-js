@@ -1,10 +1,10 @@
 /* eslint-disable no-use-before-define */
 const {BigInteger} = require('jsbn')
+const BN = require('bn.js')
 const {encodeDer, decodeDer} = require('./asn1')
 const SM3Digest = require('./sm3')
 const SM2Cipher = require('./sm2')
 const _ = require('./utils')
-const BN = require('bn.js');
 
 
 const {G, curve, n} = _.generateEcparam()
@@ -190,27 +190,27 @@ function getPublicKeyFromPrivateKey(privateKey, mode) {
   const x = _.leftPad(PA.getX().toBigInteger().toString(16), 64)
   const y = _.leftPad(PA.getY().toBigInteger().toString(16), 64)
 
-  let yBn = new BN(y,16);
-  let s = '';
+  const yBn = new BN(y, 16)
+  let s = ''
   switch (mode) {
     case 'compress':
       if ((yBn.words[0] & 1) === 0) {
-        s = '02';
+        s = '02'
       } else {
-        s = '03';
+        s = '03'
       }
-      return s + x;
+      return s + x
     case 'mix':
       if ((yBn.words[0] & 1) === 0) {
-        s = '06';
+        s = '06'
       } else {
-        s = '07';
+        s = '07'
       }
-      break;
+      break
     default:
-      s = '04';
+      s = '04'
   }
-  return s + x + y;
+  return s + x + y
 }
 
 /**
